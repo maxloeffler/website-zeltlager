@@ -17,6 +17,16 @@ body {
   font-family: 'DarumadropOne', sans-serif;
   font-size: 1.5vw;
   color: #00000088;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 .header {
@@ -86,7 +96,7 @@ a {
 }
 
 .header .tabs .aktiv {
-  color: black
+  color: black;
 }
 
 .header .tabs a:hover {
@@ -121,10 +131,32 @@ a {
   width: 100vw;
 }
 
+.main.index {
+  margin-top: 20vh;
+}
+
+.main.aktuelles,
+.main.zeltlager {
+  margin-top: 5vh;
+}
+
+.main.imp {
+  margin-top: 13vh;
+}
+
 .main .inhalt {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.inhalt.index {
+  width: 80vw;
+}
+
+.inhalt.aktuelles,
+.inhalt.zeltlager {
+  width: 55vw;
 }
 
 .bilder-galerie {
@@ -283,3 +315,286 @@ footer a {
   object-fit: cover;
 }
 
+/* ─────────────────────────────────────────
+   TABLET  (≤ 900px)
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  body {
+    font-size: 2vw;
+    gap: 4vw;
+  }
+
+  /* Header */
+  .header {
+    font-size: 2vw;
+  }
+
+  .header .logo {
+    width: 32vw;
+    height: 7vw;
+    font-size: 2.8vw;
+  }
+
+  .header .tabs {
+    width: 38vw;
+    font-size: 1.8vw;
+  }
+
+  .header .kontakt {
+    width: 14vw;
+    height: 7vw;
+  }
+
+  .header .fortschritt {
+    height: 0.5vw;
+  }
+
+  /* Gallery */
+  .bilder-galerie {
+    flex-direction: column;
+    height: auto;
+    gap: 4vw;
+  }
+
+  .bilder-galerie .beschreibung {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .bilder-galerie .beschreibung h1 {
+    font-size: 3.5vw;
+  }
+
+  .bilder-container {
+    width: 100%;
+    height: 45vw;
+  }
+
+  /* Flyer */
+  .flyer-bilder {
+    flex-direction: column;
+    gap: 4vw;
+  }
+
+  .flyer-bilder img {
+    width: 100%;
+  }
+
+  /* Infos */
+  .infos p {
+    font-size: 2.5vw;
+  }
+
+  .infos button {
+    font-size: 2vw;
+    padding: 1vw 2vw;
+    border-radius: 0.8vw;
+  }
+
+  /* Impressum */
+  .impressum h1 {
+    margin-bottom: 6vw;
+  }
+
+  .impressum * {
+    margin-top: 1.2vw;
+    margin-bottom: 1.2vw;
+  }
+
+  /* Beiträge */
+  .beitrags-bilder {
+    width: 92%;
+    gap: 3vw;
+  }
+
+  /* Footer */
+  footer {
+    font-size: 1.6vw;
+  }
+}
+
+/* ─────────────────────────────────────────
+   MOBILE  (≤ 560px)
+───────────────────────────────────────── */
+@media (max-width: 560px) {
+  body {
+    font-size: 5vw;
+    gap: 6vw;
+    /* leave room for fixed header */
+    padding-top: 28vw;
+    box-sizing: border-box;
+  }
+
+  /* ── Header ── */
+  .header .horizontal {
+    flex-wrap: wrap;
+    row-gap: 2vw;
+    padding: 3vw 4vw;
+    width: auto;
+  }
+
+  .header {
+    font-size: 5vw;
+  }
+
+  .header .logo {
+    width: auto;
+    height: 13vw;
+    font-size: 6.5vw;
+    flex-shrink: 0;
+  }
+
+  .header .logo img {
+    padding-right: 2.5vw;
+  }
+
+  /* Stack tabs below logo + contact row */
+  .header .tabs {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    font-size: 4.5vw;
+    padding-bottom: 2.5vw;
+  }
+
+  .header .kontakt {
+    width: auto;
+    height: 13vw;
+    gap: 3vw;
+  }
+
+  .header .kontakt img {
+    height: 55%;
+  }
+
+  .header .fortschritt {
+    height: 1vw;
+  }
+
+  /* ── Main content — reduce side padding ── */
+  .main {
+    padding-left: 4vw;
+    padding-right: 4vw;
+    box-sizing: border-box;
+  }
+
+  .main.index {
+    margin-top: 4vh;
+  }
+
+  .main.aktuelles,
+  .main.zeltlager {
+    margin-top: 0vh;
+  }
+
+  .main.imp {
+    margin-top: 13vh;
+  }
+
+  .main .inhalt {
+    width: 90%;
+  }
+
+  /* ── Gallery ── */
+  .bilder-galerie {
+    flex-direction: column;
+    height: auto;
+    gap: 6vw;
+  }
+
+  .bilder-galerie .beschreibung {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .bilder-galerie .beschreibung h1 {
+    font-size: 7vw;
+    margin-bottom: 2vw;
+  }
+
+  .bilder-container {
+    width: 100%;
+    height: 60vw;
+    /* Soften the jagged clip-path so it still looks good at small sizes */
+    clip-path: polygon(
+      2%  4%,  14% 0%,  28% 3%,  42% 0%,  56% 3%,  70% 0%,  84% 3%,  98% 0%,
+      100% 14%, 97% 30%, 100% 46%, 97% 62%, 100% 78%, 97% 94%, 100% 100%,
+      84% 97%, 70% 100%, 54% 97%, 40% 100%, 26% 97%, 12% 100%, 0% 97%,
+      3%  82%,  0%  66%,  3%  50%,  0%  34%,  3%  18%
+    );
+  }
+
+  /* ── Flyer ── */
+  .flyer {
+    width: 100%;
+    margin-bottom: 6vw;
+    box-sizing: border-box;
+  }
+
+  .flyer-bilder {
+    flex-direction: column;
+    gap: 5vw;
+  }
+
+  .flyer-bilder img {
+    width: 100%;
+  }
+
+  /* ── Infos ── */
+  .infos {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .infos p {
+    font-size: 5vw;
+  }
+
+  .infos button {
+    font-size: 5vw;
+    padding: 3vw 5vw;
+    border-radius: 2vw;
+    width: 100%;
+    margin-bottom: 2vw;
+  }
+
+  /* ── Impressum ── */
+  .impressum {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .impressum h1 {
+    margin-bottom: 8vw;
+    font-size: 7vw;
+  }
+
+  .impressum * {
+    margin-top: 2.5vw;
+    margin-bottom: 2.5vw;
+  }
+
+  /* ── Beiträge ── */
+  .beitrag {
+    width: 100%;
+    margin-bottom: 10vw;
+    box-sizing: border-box;
+  }
+
+  .beitrags-bilder {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 4vw;
+    margin-top: 4vw;
+  }
+
+  /* ── Footer ── */
+  footer {
+    font-size: 3.5vw;
+    bottom: 3vw;
+    margin-bottom: 4vw;
+    text-align: center;
+    flex-direction: column;
+    gap: 1vw;
+  }
+}
