@@ -87,10 +87,11 @@ h1 {
 }
 
 a {
-  text-decoration: none;
+  color: #049ba8;
 }
 
 .header .tabs a {
+  text-decoration: none;
   color: #00000044;
   transition: color 0.25s ease;
 }
@@ -226,6 +227,7 @@ footer {
 
 footer a {
   color: #00000022;
+  text-decoration: none;
 }
 
 .impressum {
@@ -238,8 +240,9 @@ footer a {
   margin-bottom: 5vw;
 }
 
-.impressum a {
-  color: #00000088;
+.impresum h1,
+.impressum p {
+  color: black;
 }
 
 .impressum * {
@@ -272,10 +275,6 @@ footer a {
 .infos p {
   color: black;
   font-size: 1.75vw;
-}
-
-.infos a {
-  color: #00000088;
 }
 
 .infos button {
@@ -573,6 +572,10 @@ footer a {
   .impressum * {
     margin-top: 2.5vw;
     margin-bottom: 2.5vw;
+  }
+
+  .impressum p {
+    color: black;
   }
 
   /* ── Beiträge ── */
