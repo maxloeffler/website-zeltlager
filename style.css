@@ -452,7 +452,7 @@ footer a {
   .header .tabs {
     order: 3;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     font-size: 4.5vw;
     padding-bottom: 2.5vw;
   }
@@ -460,7 +460,7 @@ footer a {
   .header .kontakt {
     width: auto;
     height: 13vw;
-    gap: 0.75vh;
+    gap: 0.25vh;
   }
 
   .header .kontakt img {
