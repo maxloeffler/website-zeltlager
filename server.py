@@ -12,19 +12,27 @@ text_types = {"text/css", "application/javascript", "text/html", "text/plain"}
 
 
 for doc in os.listdir("dokumente"):
-    valid_resources[f"/dokumente/{doc}"] = "application/pdf"
+    if doc.lower().endswith(".pdf"):
+        valid_resources[f"/dokumente/{doc}"] = "application/pdf"
 
 for img in os.listdir("bilder"):
-    valid_resources[f"/bilder/{img}"] = "image/jpeg"
+    if img.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
+        valid_resources[f"/bilder/{img}"] = "image/jpeg"
 
+print("const images = [")
 for img in os.listdir("bilder/galerie"):
-    valid_resources[f"/bilder/galerie/{img}"] = "image/jpeg"
+    if img.lower().endswith((".jpg", ".jpeg", ".heic")):
+        print(f'    "{img}",')
+        valid_resources[f"/bilder/galerie/{img}"] = "image/jpeg"
+print("]")
 
 for img in os.listdir("bilder/news"):
-    valid_resources[f"/bilder/news/{img}"] = "image/jpeg"
+    if img.lower().endswith((".jpg", ".jpeg")):
+        valid_resources[f"/bilder/news/{img}"] = "image/jpeg"
 
 for fonts in os.listdir("fonts"):
-    valid_resources[f"/fonts/{fonts}"] = "font/ttf"
+    if fonts.lower().endswith(".ttf"):
+        valid_resources[f"/fonts/{fonts}"] = "font/ttf"
 
 
 def handle_page(req, params, page):
