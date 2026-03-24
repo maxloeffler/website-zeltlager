@@ -70,6 +70,9 @@ ROUTES = {
 # --- Server ---
 
 
+logfile = open("server.log", "a")
+
+
 class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
@@ -100,7 +103,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
 
     def log_message(self, format, *args):
-        print(f"{self.address_string()} {format % args}")
+        logfile.write(f"{self.client_address[0]} - {format % args}\n")
+        logfile.flush()
 
 
 if __name__ == "__main__":
