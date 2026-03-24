@@ -76,6 +76,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
         params = parse_qs(parsed.query)
         route = ROUTES.get(parsed.path)
 
+        if self.headers.get("Host", "").startswith("www."):
+            self.send_response(301)
+            self.send_header("Location", f"https://kjg-lautzkirchen.de{self.path}")
+            self.end_headers()
+            return
+
         if route:
             route(self, params)
         else:
