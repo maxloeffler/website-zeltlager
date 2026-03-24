@@ -1,6 +1,7 @@
-import http.server
-import os
+from socketserver import ThreadingMixIn
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+import os
 
 # --- Define your routes here ---
 
@@ -73,7 +74,7 @@ ROUTES = {
 logfile = open("server.log", "a")
 
 
-class Handler(http.server.BaseHTTPRequestHandler):
+class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
@@ -107,7 +108,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
         logfile.flush()
 
 
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
+
+
 if __name__ == "__main__":
-    server = http.server.HTTPServer(("0.0.0.0", 8080), Handler)
+    server = ThreadedHTTPServer(("0.0.0.0", 8080), Handler)
     print("Serving HTTP on http://localhost:8080")
     server.serve_forever()
