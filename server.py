@@ -91,18 +91,6 @@ class Handler(BaseHTTPRequestHandler):
         else:
             handle_resource(self, params, parsed.path)
 
-    def do_POST(self):
-        parsed = urlparse(self.path)
-        length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(length)
-        route = ROUTES.get(parsed.path)
-
-        if route:
-            route(self, {}, body)
-        else:
-            self.send_response(404)
-            self.end_headers()
-
     def log_message(self, format, *args):
         logfile.write(f"{self.client_address[0]} - {format % args}\n")
         logfile.flush()
