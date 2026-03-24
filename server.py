@@ -32,8 +32,8 @@ for img in os.listdir("bilder/news"):
         valid_resources[f"/bilder/news/{img}"] = "image/webp"
 
 for fonts in os.listdir("fonts"):
-    if fonts.lower().endswith(".ttf"):
-        valid_resources[f"/fonts/{fonts}"] = "font/ttf"
+    if fonts.lower().endswith(".woff2"):
+        valid_resources[f"/fonts/{fonts}"] = "font/woff2"
 
 
 def handle_page(req, params, page):
