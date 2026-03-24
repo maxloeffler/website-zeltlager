@@ -17,6 +17,8 @@ body {
   font-family: 'DarumadropOne', sans-serif;
   font-size: 1.5vw;
   color: #00000088;
+  transition: opacity 0.3s ease;
+  opacity: 0;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }

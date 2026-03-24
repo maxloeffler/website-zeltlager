@@ -17,6 +17,10 @@ const images = [
     "E411EEEA-A70C-48B7-AB7A-BEB9585F6BC0_1_105_c.webp",
 ]
 
+globalThis.addEventListener('load', () => {
+    document.querySelector('body').style.opacity = 1;
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     const generateBorder = (pointsPerSide = 10, roughness = 8) => {
         const pts = [];
