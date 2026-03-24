@@ -16,19 +16,19 @@ for doc in os.listdir("dokumente"):
         valid_resources[f"/dokumente/{doc}"] = "application/pdf"
 
 for img in os.listdir("bilder"):
-    if img.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-        valid_resources[f"/bilder/{img}"] = "image/jpeg"
+    if img.lower().endswith((".webp")):
+        valid_resources[f"/bilder/{img}"] = "image/webp"
 
 print("const images = [")
 for img in os.listdir("bilder/galerie"):
-    if img.lower().endswith((".jpg", ".jpeg", ".heic")):
+    if img.lower().endswith((".webp")):
         print(f'    "{img}",')
-        valid_resources[f"/bilder/galerie/{img}"] = "image/jpeg"
+        valid_resources[f"/bilder/galerie/{img}"] = "image/webp"
 print("]")
 
 for img in os.listdir("bilder/news"):
-    if img.lower().endswith((".jpg", ".jpeg")):
-        valid_resources[f"/bilder/news/{img}"] = "image/jpeg"
+    if img.lower().endswith((".webp")):
+        valid_resources[f"/bilder/news/{img}"] = "image/webp"
 
 for fonts in os.listdir("fonts"):
     if fonts.lower().endswith(".ttf"):
