@@ -1,6 +1,7 @@
 from socketserver import ThreadingMixIn
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
+import threading
 import os
 
 # --- Define your routes here ---
@@ -20,12 +21,9 @@ for img in os.listdir("bilder"):
     if img.lower().endswith((".webp")):
         valid_resources[f"/bilder/{img}"] = "image/webp"
 
-print("const images = [")
 for img in os.listdir("bilder/galerie"):
     if img.lower().endswith((".webp")):
-        print(f'    "{img}",')
         valid_resources[f"/bilder/galerie/{img}"] = "image/webp"
-print("]")
 
 for img in os.listdir("bilder/news"):
     if img.lower().endswith((".webp")):
@@ -36,23 +34,39 @@ for fonts in os.listdir("fonts"):
         valid_resources[f"/fonts/{fonts}"] = "font/woff2"
 
 
-def handle_page(req, params, page):
+logfile = open("server.log", "a")
+cache_lock = threading.Lock()
+resources = {}
+pages = {}
+
+
+def handle_page(req, page):
+    with cache_lock:
+        if page not in pages:
+            with open(page.lstrip("/"), "r") as file:
+                pages[page] = file.read().encode()
+        data = pages[page]
     req.send_response(200)
     req.send_header("Content-Type", "text/html; charset=utf-8")
+    req.send_header("Content-Length", str(len(data)))
     req.end_headers()
-    file = open(page, "r").read()
-    req.wfile.write(file.encode())
+    req.wfile.write(data)
 
 
-def handle_resource(req, params, resource):
+def handle_resource(req, resource):
     if resource in valid_resources:
+        with cache_lock:
+            if resource not in resources:
+                with open(resource.lstrip("/"), "rb") as file:
+                    resources[resource] = file.read()
+            data = resources[resource]
         mime = valid_resources[resource]
         content_type = mime + "; charset=utf-8" if mime in text_types else mime
         req.send_response(200)
         req.send_header("Content-Type", content_type)
+        req.send_header("Content-Length", str(len(data)))
         req.end_headers()
-        with open(resource.lstrip("/"), "rb") as f:
-            req.wfile.write(f.read())
+        req.wfile.write(data)
     else:
         req.send_response(404)
         req.send_header("Content-Type", "text/plain; charset=utf-8")
@@ -61,20 +75,18 @@ def handle_resource(req, params, resource):
 
 
 ROUTES = {
-    "/": lambda req, params: handle_page(req, params, "index.html"),
-    "/startseite": lambda req, params: handle_page(req, params, "index.html"),
-    "/zeltlager": lambda req, params: handle_page(req, params, "zeltlager.html"),
-    "/aktuelles": lambda req, params: handle_page(req, params, "aktuelles.html"),
-    "/impressum": lambda req, params: handle_page(req, params, "impressum.html"),
+    "/": lambda req, _: handle_page(req, "index.html"),
+    "/startseite": lambda req, _: handle_page(req, "index.html"),
+    "/zeltlager": lambda req, _: handle_page(req, "zeltlager.html"),
+    "/aktuelles": lambda req, _: handle_page(req, "aktuelles.html"),
+    "/impressum": lambda req, _: handle_page(req, "impressum.html"),
 }
 
+
 # --- Server ---
-
-
-logfile = open("server.log", "a")
-
-
 class Handler(BaseHTTPRequestHandler):
+    timeout = 10
+
     def do_GET(self):
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
@@ -89,7 +101,7 @@ class Handler(BaseHTTPRequestHandler):
         if route:
             route(self, params)
         else:
-            handle_resource(self, params, parsed.path)
+            handle_resource(self, parsed.path)
 
     def log_message(self, format, *args):
         logfile.write(f"{self.client_address[0]} - {format % args}\n")
@@ -98,6 +110,8 @@ class Handler(BaseHTTPRequestHandler):
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     daemon_threads = True
+    block_on_close = False
+    max_children = 50
 
 
 if __name__ == "__main__":
