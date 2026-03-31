@@ -40,7 +40,7 @@ function log(ip, message) {
 }
 
 // --- Handlers ---
-function handlePage(_req, res, filePath) {
+function handlePage(res, filePath) {
     if (!pageCache[filePath]) {
         pageCache[filePath] = fs.readFileSync(filePath.replace(/^\//, ""), "utf8");
     }
@@ -52,7 +52,7 @@ function handlePage(_req, res, filePath) {
     res.end(data);
 }
 
-function handleResource(_req, res, resourcePath) {
+function handleResource(res, resourcePath) {
     const mime = validResources[resourcePath];
     if (!mime) {
         res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
@@ -75,11 +75,11 @@ function handleResource(_req, res, resourcePath) {
 
 // --- Routes ---
 const ROUTES = {
-    "/": (req, res) => handlePage(req, res, "index.html"),
-    "/startseite": (req, res) => handlePage(req, res, "index.html"),
-    "/zeltlager": (req, res) => handlePage(req, res, "zeltlager.html"),
-    "/aktuelles": (req, res) => handlePage(req, res, "aktuelles.html"),
-    "/impressum": (req, res) => handlePage(req, res, "impressum.html"),
+    "/": (_req, res) => handlePage(res, "zeltlager.html"),
+    "/startseite": (_req, res) => handlePage(res, "index.html"),
+    "/zeltlager": (_req, res) => handlePage(res, "zeltlager.html"),
+    "/aktuelles": (_req, res) => handlePage(res, "aktuelles.html"),
+    "/impressum": (_req, res) => handlePage(res, "impressum.html"),
 };
 
 // --- Server ---
@@ -100,7 +100,7 @@ const server = http.createServer((req, res) => {
     if (route) {
         route(req, res);
     } else {
-        handleResource(req, res, parsed.pathname);
+        handleResource(res, parsed.pathname);
     }
 });
 
