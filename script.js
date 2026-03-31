@@ -15,41 +15,53 @@ const images = [
     "589F423D-1651-4FC7-9BF7-3E22134705F8_1_105_c.webp",
     "2982A0D4-669A-424E-8B8E-1D7E5CB8C56A_1_105_c.webp",
     "E411EEEA-A70C-48B7-AB7A-BEB9585F6BC0_1_105_c.webp",
-]
+];
 
 document.fonts.ready.then(() => {
-    document.querySelector('body').style.opacity = 1;
+    document.querySelector("body").style.opacity = 1;
 });
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     const generateBorder = (pointsPerSide = 10, roughness = 8) => {
         const pts = [];
         const jitter = () => (Math.random() - 0.5) * roughness;
 
         for (let i = 0; i <= pointsPerSide; i++) {
-            pts.push(`${(i / pointsPerSide * 100).toFixed(1)}% ${Math.max(0, jitter()).toFixed(1)}%`);
+            pts.push(
+                `${(i / pointsPerSide * 100).toFixed(1)}% ${Math.max(0, jitter()).toFixed(1)
+                }%`,
+            );
         }
         for (let i = 1; i <= pointsPerSide; i++) {
-            pts.push(`${(100 - Math.max(0, jitter())).toFixed(1)}% ${(i / pointsPerSide * 100).toFixed(1)}%`);
+            pts.push(
+                `${(100 - Math.max(0, jitter())).toFixed(1)}% ${(i / pointsPerSide * 100).toFixed(1)
+                }%`,
+            );
         }
         for (let i = pointsPerSide - 1; i >= 0; i--) {
-            pts.push(`${(i / pointsPerSide * 100).toFixed(1)}% ${(100 - Math.max(0, jitter())).toFixed(1)}%`);
+            pts.push(
+                `${(i / pointsPerSide * 100).toFixed(1)}% ${(100 - Math.max(0, jitter())).toFixed(1)
+                }%`,
+            );
         }
         for (let i = pointsPerSide - 1; i >= 1; i--) {
-            pts.push(`${Math.max(0, jitter()).toFixed(1)}% ${(i / pointsPerSide * 100).toFixed(1)}%`);
+            pts.push(
+                `${Math.max(0, jitter()).toFixed(1)}% ${(i / pointsPerSide * 100).toFixed(1)
+                }%`,
+            );
         }
 
-        return `polygon(${pts.join(', ')})`;
-    }
+        return `polygon(${pts.join(", ")})`;
+    };
 
-    const galery = document.querySelector('.bilder-container');
+    const galery = document.querySelector(".bilder-container");
     if (galery) {
         let currentImage = Math.random() * images.length | 0;
         const nextImage = () => {
             currentImage = (currentImage + 1) % images.length;
 
-            const currentElement = galery.querySelector('img');
-            const nextElement = document.createElement('img');
+            const currentElement = galery.querySelector("img");
+            const nextElement = document.createElement("img");
 
             nextElement.src = "bilder/galerie/" + images[currentImage];
             nextElement.style.opacity = 0;
@@ -71,29 +83,62 @@ document.addEventListener('DOMContentLoaded', function () {
                     galery.removeChild(currentElement);
                 }, 2000);
             };
-            document.querySelector('img').style.clipPath = generateBorder(7, 6);
-        }
+            document.querySelector("img").style.clipPath = generateBorder(7, 6);
+        };
 
         nextImage();
         setInterval(nextImage, 6000);
     }
 
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    globalThis.addEventListener("scroll", () => {
+        const scrollTop = globalThis.scrollY;
+        const docHeight = document.documentElement.scrollHeight -
+            globalThis.innerHeight;
         const scrollPercent = (scrollTop / docHeight) * 100;
 
-        document.querySelector('.fortschritt').style.width = scrollPercent + '%';
+        document.querySelector(".fortschritt").style.width = scrollPercent +
+            "%";
     });
 
-    const news = document.querySelectorAll('.beitrag');
-    news.forEach(beitrag => {
-        const images = beitrag.querySelectorAll('.container');
+    const news = document.querySelectorAll(".beitrag");
+    news.forEach((beitrag) => {
+        const images = beitrag.querySelectorAll(".container");
         console.log(images);
-        images.forEach(img => {
+        images.forEach((img) => {
             img.style.clipPath = generateBorder(5, 4);
         });
     });
+
+    const updateCountdown = () => {
+        const currentTime = new Date();
+        const timeLeft = whenItBegins - currentTime;
+
+        const seconds = Math.floor(timeLeft / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        const h = hours % 24;
+        const m = minutes % 60;
+        const s = seconds % 60;
+
+        const parts = [];
+        if (days > 0) parts.push(`${days} Tag${days !== 1 ? "e" : ""}`);
+        if (h > 0) parts.push(`${h} Stunde${h !== 1 ? "n" : ""}`);
+        if (m > 0) parts.push(`${m} Minute${m !== 1 ? "n" : ""}`);
+        if (s > 0) parts.push(`${s} Sekunde${s !== 1 ? "n" : ""}`);
+
+        const time = parts.join(" ") || "Weniger als eine Sekunde";
+        countdown.innerText =
+            `Nur noch\n${time},\ndann geht's los!\nAnmeldeschluss: ${registrationDeadline}`;
+    };
+
+    const whenItBegins = new Date("2026-07-23T14:00:00");
+    const registrationDeadline = "09.07.2026";
+
+    const countdown = document.querySelector(".countdown");
+    if (countdown) {
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
 });
-
-

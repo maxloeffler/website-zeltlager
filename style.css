@@ -63,6 +63,8 @@ html::-webkit-scrollbar {
 
 h1 {
   color: black;
+  overflow-wrap: break-word;
+  font-size: 1.95em;
 }
 
 .header .logo {
@@ -252,6 +254,18 @@ footer a {
 .impressum * {
   margin-top: 0.75vw;
   margin-bottom: 0.75vw;
+}
+
+.countdown {
+  min-width: 28vw;
+  min-height: 7vw;
+  margin-top: 2vw;
+  padding: 10px;
+  text-align: center;
+  align-content: center;
+  background-color: #ff555544;
+  border: 8px solid #ff555588;
+  border-radius: 1vw;
 }
 
 .flyer {
@@ -532,6 +546,10 @@ footer a {
 
   .flyer-bilder img {
     width: 100%;
+  }
+
+  .countdown {
+    margin-top: 6vw;
   }
 
   /* ── Infos ── */
