@@ -80,6 +80,7 @@ const ROUTES = {
     "/zeltlager": (_req, res) => handlePage(res, "zeltlager.html"),
     "/aktuelles": (_req, res) => handlePage(res, "aktuelles.html"),
     "/impressum": (_req, res) => handlePage(res, "impressum.html"),
+    "/favicon.ico": (_req, res) => handleResource(res, "/bilder/seelenbohrer.webp")
 };
 
 // --- Server ---
