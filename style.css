@@ -120,7 +120,8 @@ a {
 }
 
 .main.aktuelles,
-.main.zeltlager {
+.main.zeltlager,
+.main.team {
   margin-top: 10vh;
 }
 
@@ -491,7 +492,8 @@ footer a {
   }
 
   .main.aktuelles,
-  .main.zeltlager {
+  .main.zeltlager,
+  .main.team {
     margin-top: 0vh;
   }
 
@@ -568,6 +570,11 @@ footer a {
     border-radius: 2vw;
     width: 100%;
     margin-bottom: 2vw;
+  }
+
+   /* -- Construction -- */
+  .in-construction {
+    margin-top: 50px;
   }
 
   /* ── Impressum ── */

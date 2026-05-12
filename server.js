@@ -78,6 +78,7 @@ const ROUTES = {
     "/": (_req, res) => handlePage(res, "zeltlager.html"),
     "/startseite": (_req, res) => handlePage(res, "index.html"),
     "/zeltlager": (_req, res) => handlePage(res, "zeltlager.html"),
+    "/team": (_req, res) => handlePage(res, "team.html"),
     "/aktuelles": (_req, res) => handlePage(res, "aktuelles.html"),
     "/impressum": (_req, res) => handlePage(res, "impressum.html"),
     "/favicon.ico": (_req, res) => handleResource(res, "/bilder/seelenbohrer.webp")
