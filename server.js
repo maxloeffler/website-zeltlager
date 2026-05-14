@@ -75,7 +75,7 @@ function handleResource(res, resourcePath) {
 
 // --- Routes ---
 const ROUTES = {
-    "/": (_req, res) => handlePage(res, "zeltlager.html"),
+    "/": (_req, res) => handlePage(res, "startseite.html"),
     "/startseite": (_req, res) => handlePage(res, "index.html"),
     "/zeltlager": (_req, res) => handlePage(res, "zeltlager.html"),
     "/team": (_req, res) => handlePage(res, "team.html"),
