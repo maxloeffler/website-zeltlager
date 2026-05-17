@@ -26,6 +26,7 @@ function registerDir(dir, pattern, mime) {
 registerDir("dokumente", /\.pdf$/, "application/pdf");
 registerDir("bilder", /\.webp$/, "image/webp");
 registerDir("bilder/galerie", /\.webp$/, "image/webp");
+registerDir("bilder/team", /\.webp$/, "image/webp");
 registerDir("bilder/news", /\.webp$/, "image/webp");
 registerDir("fonts", /\.woff2$/, "font/woff2");
 

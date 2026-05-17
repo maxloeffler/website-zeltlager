@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `polygon(${pts.join(", ")})`;
     };
 
-    const galery = document.querySelector(".bilder-container");
+    const galery = document.querySelector(".bilder-galerie .bilder-container");
     if (galery) {
         let currentImage = Math.random() * images.length | 0;
         const nextImage = () => {
@@ -87,6 +87,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         nextImage();
         setInterval(nextImage, 6000);
+    }
+
+    const teamMemberPictures = document.querySelectorAll(".members-list .bilder-container");
+    if (teamMemberPictures) {
+        const assignBorders = () => {
+            console.log("Assigning borders to team member pictures...");
+            for (const image of teamMemberPictures) {
+                image.style.clipPath = generateBorder(5, 4);
+            }
+        }
+        assignBorders();
+        setInterval(assignBorders, 6000);
     }
 
     globalThis.addEventListener("scroll", () => {

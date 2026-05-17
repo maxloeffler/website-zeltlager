@@ -87,7 +87,7 @@ h1 {
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  width: 30vw;
+  width: 40vw;
 }
 
 a {
@@ -140,7 +140,8 @@ a {
 }
 
 .inhalt.aktuelles,
-.inhalt.zeltlager {
+.inhalt.zeltlager,
+.inhalt.team {
   width: 55vw;
 }
 
@@ -332,6 +333,72 @@ footer a {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+
+/* -- Team -- */
+.team-general {}
+
+.members-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 3vw;
+}
+
+.member-description {
+  margin: 0 5vw;
+}
+
+.member {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+}
+
+.member:nth-child(odd) {
+  flex-direction: row-reverse;
+}
+
+.member img {
+  width: 18vw;
+  height: 18vw;
+  object-fit: cover;
+  border-radius: 20%;
+}
+
+.member-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.member-role {
+  font-size: 1.2rem;
+  color: #888;
+  font-style: italic;
+}
+
+.member-qualifications {
+  list-style: none;
+  padding: 0;
+  margin: 1vw 0;
+  font-size: 0.9rem;
+}
+
+.member-qualifications li {
+  font-size: 1.2rem;
+  padding: 2px 0;
+  color: #00000055;
+}
+
+.qualifications-divider {
+  width: 50%;
+  height: 2px;
+  background-color: #00000022;
+  margin: 8px auto;
 }
 
 /* ─────────────────────────────────────────
@@ -575,6 +642,32 @@ footer a {
    /* -- Construction -- */
   .in-construction {
     margin-top: 50px;
+  }
+
+  /* ── Team ── */
+  .members-list {
+    margin-top: 6vw;
+    gap: 8vw;
+  }
+
+  .member,
+  .member:nth-child(odd) {
+    flex-direction: column; /* overrides both row and row-reverse */
+    padding: 16px;
+    text-align: center;
+  }
+
+  .member img {
+    width: 60vw;
+    height: 60vw;
+  }
+
+  .member-description {
+    margin: 0 8vw;
+  }
+
+  .member-qualifications li {
+    font-size: 1rem;
   }
 
   /* ── Impressum ── */
