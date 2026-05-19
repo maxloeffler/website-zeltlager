@@ -313,6 +313,29 @@ footer a {
   background-color: #037a7f;
 }
 
+.faq {
+  margin: 2vw 0 4vw 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5vw;
+}
+
+.faq-title {
+  margin-bottom: 0.5vw;
+}
+
+.faq-item b {
+  color: black;
+}
+
+.faq .divider {
+  width: 90%;
+  height: 1.5px;
+  background-color: #00000022;
+  align-self: center;
+  margin: 1.5vw 0;
+}
+
 .beitrag {
   display: flex;
   flex-direction: column;
@@ -470,6 +493,10 @@ footer a {
     font-size: 2vw;
     padding: 1vw 2vw;
     border-radius: 0.8vw;
+  }
+
+  .faq {
+    font-size: 2.5vw;
   }
 
   /* Impressum */
@@ -637,6 +664,19 @@ footer a {
     border-radius: 2vw;
     width: 100%;
     margin-bottom: 2vw;
+  }
+
+  .faq {
+    font-size: 5vw;
+    margin: 4vw 0 10vw 0;
+  }
+
+  .faq-title {
+    margin-bottom: 1.6vw;
+  }
+
+  .faq .divider {
+    margin: 5vw 0;
   }
 
    /* -- Construction -- */
