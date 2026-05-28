@@ -31,6 +31,13 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .header {
   position: fixed;
   top: 0;
@@ -75,6 +82,7 @@ h1 {
   align-items: center;
   font-size: 2vw;
   color: black;
+  cursor: pointer;
 }
 
 .header .logo img {
@@ -94,7 +102,7 @@ a {
   color: #049ba8;
 }
 
-.header .tabs a {
+.header a {
   text-decoration: none;
   color: #00000044;
   transition: color 0.25s ease;

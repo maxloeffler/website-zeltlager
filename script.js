@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `Nur noch\n${time},\ndann geht's los!\nAnmeldeschluss: ${registrationDeadline}`;
     };
 
-    const whenItBegins = new Date("2026-07-23T14:00:00");
+    const whenItBegins = new Date("2026-07-23T13:00:00");
     const registrationDeadline = "09.07.2026";
 
     const countdown = document.querySelector(".countdown");
