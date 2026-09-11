@@ -223,7 +223,6 @@ footer .kontakt {
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  width: 20%;
   height: 40%;
 }
 
@@ -231,9 +230,9 @@ footer .kontakt img {
   height: 100%;
   margin-left: 0.5vw;
   margin-right: 0.5vw;
-  transition: transform 0.175s ease, box-shadow 0.175s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 22.37%;
 }
 
 footer .kontakt img:hover {
@@ -765,7 +764,7 @@ footer a {
   footer .kontakt {
     width: auto;
     height: 50%;
-    gap: 3vh;
+    gap: 2vh;
   }
 
   footer .kontakt img {
