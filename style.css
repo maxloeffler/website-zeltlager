@@ -204,6 +204,21 @@ a {
   transition: opacity 1.5s ease;
 }
 
+.bilder-container .jahr {
+  z-index: 10;
+  align-self: end;
+  justify-self: end;
+  margin: 1.5vw;
+  padding: 0.2vw 1vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25vw;
+  color: white;
+  background-color: #049ba8aa;
+  border-radius: 0.75vw;
+}
+
 footer {
   display: flex;
   flex-direction: column;
@@ -633,6 +648,13 @@ footer a {
       84% 97%, 70% 100%, 54% 97%, 40% 100%, 26% 97%, 12% 100%, 0% 97%,
       3%  82%,  0%  66%,  3%  50%,  0%  34%,  3%  18%
     );
+  }
+
+  .bilder-container .jahr {
+    margin: 3vw;
+    padding: 0.4vw 2vw;
+    font-size: 5vw;
+    border-radius: 1.5vw;
   }
 
   /* ── Flyer ── */

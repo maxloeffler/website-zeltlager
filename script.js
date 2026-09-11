@@ -1,20 +1,35 @@
-const images = [
-    "E3D10CC3-70C1-42CA-9DEE-E54A01ADC57E_1_105_c.webp",
-    "53566BF3-F022-4AB7-8145-DAEDABFE86CA_1_105_c.webp",
-    "DDED3DF4-A59E-41E1-8027-74647B3100DC_1_105_c.webp",
-    "DSC_0765.webp",
-    "DSC_0077.webp",
-    "3E5EACDB-97F6-4807-9BE8-966FB8A0EDB1_1_105_c.webp",
-    "66448C52-C08B-4618-9260-1D12B59A7E5F_1_105_c.webp",
-    "2EEAF71D-A3DE-4A90-A4E5-999E6AF15C04_1_105_c.webp",
-    "F1C80A84-E557-42D3-B7D0-838814E91A6B_1_105_c.webp",
-    "27BCEAA2-F025-4A58-B154-832A0116FECF_1_105_c.webp",
-    "8EE1DD72-CA13-4351-8AE4-B2434189C6F0_1_102_o.webp",
-    "DSC_0878.webp",
-    "589F423D-1651-4FC7-9BF7-3E22134705F8_1_105_c.webp",
-    "2982A0D4-669A-424E-8B8E-1D7E5CB8C56A_1_105_c.webp",
-    "E411EEEA-A70C-48B7-AB7A-BEB9585F6BC0_1_105_c.webp",
-];
+async function fileExists(url) {
+    try {
+        const res = await fetch(url, { method: "GET" });
+        return res.ok;
+    } catch {
+        return false;
+    }
+}
+
+async function loadYearImages(year, baseUrl) {
+    const urls = [];
+    let i = 1;
+    while (true) {
+        const url = `${baseUrl}${year}/${i}.webp`;
+        if (!(await fileExists(url))) break;
+        urls.push(url);
+        i++;
+    }
+    return urls;
+}
+
+async function loadImages(baseUrl = "/bilder/galerie/", minYear = 2015) {
+    const currentYear = new Date().getFullYear();
+    const allImages = [];
+
+    for (let year = minYear; year <= currentYear; year++) {
+        const yearImages = await loadYearImages(year, baseUrl);
+        allImages.push(...yearImages);
+    }
+
+    return allImages;
+}
 
 document.fonts.ready.then(() => {
     document.querySelector("body").style.opacity = 1;
@@ -53,46 +68,54 @@ document.addEventListener("DOMContentLoaded", function () {
         return `polygon(${pts.join(", ")})`;
     };
 
-    const galery = document.querySelector(".bilder-galerie .bilder-container");
-    if (galery) {
-        let currentImage = Math.random() * images.length | 0;
-        const nextImage = () => {
-            currentImage = (currentImage + 1) % images.length;
+    loadImages().then((images) => {
+        const galery = document.querySelector(".bilder-galerie .bilder-container");
 
-            const currentElement = galery.querySelector("img");
-            const nextElement = document.createElement("img");
+        if (galery) {
+            let currentImage = Math.random() * images.length | 0;
+            const yearElement = document.querySelector(".bilder-galerie .jahr");
 
-            nextElement.src = "bilder/galerie/" + images[currentImage];
-            nextElement.style.opacity = 0;
-            if (nextElement.naturalWidth > nextElement.naturalHeight) {
-                nextElement.style.width = "100%";
-            } else {
-                nextElement.style.height = "100%";
-            }
+            const nextImage = () => {
+                currentImage = (currentImage + 1) % images.length;
 
-            nextElement.style.opacity = 0;
-            galery.appendChild(nextElement);
-            galery.style.clipPath = generateBorder(7, 6);
+                // capture every image currently in the DOM, not just the first
+                const oldElements = Array.from(galery.querySelectorAll("img"));
 
-            nextElement.onload = () => {
-                nextElement.style.opacity = 1;
-                currentElement.style.opacity = 0;
+                const nextElement = document.createElement("img");
+                nextElement.src = images[currentImage];
+                nextElement.style.opacity = 0;
 
-                setTimeout(() => {
-                    galery.removeChild(currentElement);
-                }, 2000);
+                nextElement.onload = () => {
+                    if (nextElement.naturalWidth > nextElement.naturalHeight) {
+                        nextElement.style.width = "100%";
+                    } else {
+                        nextElement.style.height = "100%";
+                    }
+
+                    nextElement.style.opacity = 1;
+                    galery.style.clipPath = generateBorder(7, 6);
+
+                    oldElements.forEach(el => { el.style.opacity = 0; });
+
+                    setTimeout(() => {
+                        oldElements.forEach(el => {
+                            if (el.parentNode === galery) galery.removeChild(el);
+                        });
+                    }, 2000);
+                };
+
+                galery.appendChild(nextElement);
+                yearElement.innerText = images[currentImage].match(/\/(\d{4})\//)[1] || "";
             };
-            document.querySelector("img").style.clipPath = generateBorder(7, 6);
-        };
 
-        nextImage();
-        setInterval(nextImage, 6000);
-    }
+            nextImage();
+            setInterval(nextImage, 6000);
+        }
+    });
 
     const teamMemberPictures = document.querySelectorAll(".members-list .bilder-container");
     if (teamMemberPictures) {
         const assignBorders = () => {
-            console.log("Assigning borders to team member pictures...");
             for (const image of teamMemberPictures) {
                 image.style.clipPath = generateBorder(5, 4);
             }
@@ -114,7 +137,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const news = document.querySelectorAll(".beitrag");
     news.forEach((beitrag) => {
         const images = beitrag.querySelectorAll(".container");
-        console.log(images);
         images.forEach((img) => {
             img.style.clipPath = generateBorder(5, 4);
         });
@@ -144,8 +166,8 @@ document.addEventListener("DOMContentLoaded", function () {
             `Nur noch\n${time},\ndann geht's los!\nAnmeldeschluss: ${registrationDeadline}`;
     };
 
-    const whenItBegins = new Date("2026-07-23T13:00:00");
-    const registrationDeadline = "09.07.2026";
+    const whenItBegins = new Date("2027-07-05T13:00:00");
+    const registrationDeadline = "21.06.2027";
 
     const countdown = document.querySelector(".countdown");
     if (countdown) {
