@@ -2,11 +2,16 @@ const http = require("http");
 const fs = require("fs");
 const url = require("url");
 
+// --- In-memory cache ---
+const resourceCache = {};
+const pageCache = {};
+
 // --- Resource discovery (mirrors the Python os.listdir loops) ---
 const validResources = {
     "/style.css": "text/css",
     "/script.js": "application/javascript",
 };
+const validAPIs = {};
 
 const textTypes = new Set([
     "text/css",
@@ -22,20 +27,47 @@ function registerDir(dir, pattern, mime) {
         }
     }
 }
+function registerAPI(path, responseType, action, method = "GET") {
+    validAPIs[path] = { "action": action, "responseType": responseType, "method": method };
+}
 
+
+// --- Static Resources ---
 registerDir("dokumente", /\.pdf$/, "application/pdf");
 registerDir("bilder", /\.webp$/, "image/webp");
-registerDir("bilder/galerie/2022", /\.webp$/, "image/webp");
-registerDir("bilder/galerie/2024", /\.webp$/, "image/webp");
-registerDir("bilder/galerie/2025", /\.webp$/, "image/webp");
-registerDir("bilder/galerie/2026", /\.webp$/, "image/webp");
 registerDir("bilder/team", /\.webp$/, "image/webp");
 registerDir("bilder/news", /\.webp$/, "image/webp");
 registerDir("fonts", /\.woff2$/, "font/woff2");
 
-// --- In-memory cache ---
-const resourceCache = {};
-const pageCache = {};
+// --- Dynamic Resources ---
+const images = [];
+const lastImages = [];
+fs.readdirSync("bilder/galerie")
+    .filter((name) => /^\d{4}$/.test(name))
+    .map((year) => {
+        const yearDir = `bilder/galerie/${year}`;
+        fs.readdirSync(yearDir)
+            .filter((name) => /\.webp$/.test(name))
+            .map((name) => images.push(`/${yearDir}/${name}`));
+    });
+
+registerAPI("reel-image", "application/json", (args) => {
+    let randomIndex = Math.floor(Math.random() * images.length);
+    while (lastImages.includes(randomIndex)) {
+        randomIndex = Math.floor(Math.random() * images.length);
+    }
+    lastImages.shift();
+    lastImages.push(randomIndex);
+
+    const imageName = images[randomIndex].replace(/^\//, "");
+    if (!resourceCache[imageName]) {
+        resourceCache[imageName] = fs.readFileSync(imageName);
+    }
+    return {
+        "image": resourceCache[imageName].toString("base64"),
+        "year": imageName.match(/\/(\d{4})\//)[1] || ""
+    };
+});
 
 // --- Logging ---
 const logStream = fs.createWriteStream("server.log", { flags: "a" });
@@ -77,6 +109,40 @@ function handleResource(res, resourcePath) {
     res.end(data);
 }
 
+function handleAPI(req, res) {
+    const parsedUrl = new url.URL(req.url, `https://${req.headers.host}`);
+    const apiPath = parsedUrl.pathname.replace("/api/", "");
+    const args = parsedUrl.query;
+
+    const api = validAPIs[apiPath];
+    if (!api) {
+        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("404 Not Found");
+        return;
+    }
+
+    if (req.method !== validAPIs[apiPath].method) {
+        res.writeHead(405, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("405 Method Not Allowed");
+        return;
+    }
+
+    const mime = api["responseType"];
+    if (!mime) {
+        res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("500 Internal Server Error");
+        return;
+    }
+
+    const apiResult = api["action"](args);
+
+    res.writeHead(200, {
+        "Content-Type": mime,
+        "Content-Length": JSON.stringify(apiResult).length
+    });
+    res.end(JSON.stringify(apiResult));
+}
+
 // --- Routes ---
 const ROUTES = {
     "/": (_req, res) => handlePage(res, "index.html"),
@@ -85,12 +151,13 @@ const ROUTES = {
     "/team": (_req, res) => handlePage(res, "team.html"),
     "/aktuelles": (_req, res) => handlePage(res, "aktuelles.html"),
     "/impressum": (_req, res) => handlePage(res, "impressum.html"),
-    "/favicon.ico": (_req, res) => handleResource(res, "/bilder/seelenbohrer.webp")
+    "/favicon.ico": (_req, res) => handleResource(res, "/bilder/seelenbohrer.webp"),
+    "/api": handleAPI,
 };
 
 // --- Server ---
 const server = http.createServer((req, res) => {
-    const parsed = url.parse(req.url, true);
+    const parsed = new url.URL(req.url, `https://${req.headers.host}`);
     const host = req.headers["host"] || "";
 
     // www redirect
@@ -102,7 +169,7 @@ const server = http.createServer((req, res) => {
 
     log(req.socket.remoteAddress, `${req.method} ${req.url}`);
 
-    const route = ROUTES[parsed.pathname];
+    const route = ROUTES["/" + parsed.pathname.split("/")[1]];
     if (route) {
         route(req, res);
     } else {

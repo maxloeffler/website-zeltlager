@@ -1,36 +1,3 @@
-async function fileExists(url) {
-    try {
-        const res = await fetch(url, { method: "GET" });
-        return res.ok;
-    } catch {
-        return false;
-    }
-}
-
-async function loadYearImages(year, baseUrl) {
-    const urls = [];
-    let i = 1;
-    while (true) {
-        const url = `${baseUrl}${year}/${i}.webp`;
-        if (!(await fileExists(url))) break;
-        urls.push(url);
-        i++;
-    }
-    return urls;
-}
-
-async function loadImages(baseUrl = "/bilder/galerie/", minYear = 2015) {
-    const currentYear = new Date().getFullYear();
-    const allImages = [];
-
-    for (let year = minYear; year <= currentYear; year++) {
-        const yearImages = await loadYearImages(year, baseUrl);
-        allImages.push(...yearImages);
-    }
-
-    return allImages;
-}
-
 document.fonts.ready.then(() => {
     document.querySelector("body").style.opacity = 1;
 });
@@ -68,24 +35,19 @@ document.addEventListener("DOMContentLoaded", function () {
         return `polygon(${pts.join(", ")})`;
     };
 
-    loadImages().then((images) => {
-        const galery = document.querySelector(".bilder-galerie .bilder-container");
+    const galery = document.querySelector(".bilder-galerie .bilder-container");
+    if (galery) {
+        const yearElement = document.querySelector(".bilder-galerie .jahr");
+        const nextImage = () => {
+            const oldElements = Array.from(galery.querySelectorAll("img"));
 
-        if (galery) {
-            let currentImage = Math.random() * images.length | 0;
-            const yearElement = document.querySelector(".bilder-galerie .jahr");
+            const nextElement = document.createElement("img");
+            fetch('/api/reel-image')
+                .then(res => res.json())
+                .then(data => {
+                    nextElement.src = `data:image/png;base64,${data.image}`;
+                    nextElement.style.opacity = 0;
 
-            const nextImage = () => {
-                currentImage = (currentImage + 1) % images.length;
-
-                // capture every image currently in the DOM, not just the first
-                const oldElements = Array.from(galery.querySelectorAll("img"));
-
-                const nextElement = document.createElement("img");
-                nextElement.src = images[currentImage];
-                nextElement.style.opacity = 0;
-
-                nextElement.onload = () => {
                     if (nextElement.naturalWidth > nextElement.naturalHeight) {
                         nextElement.style.width = "100%";
                     } else {
@@ -94,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     nextElement.style.opacity = 1;
                     galery.style.clipPath = generateBorder(7, 6);
-
                     oldElements.forEach(el => { el.style.opacity = 0; });
 
                     setTimeout(() => {
@@ -102,16 +63,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (el.parentNode === galery) galery.removeChild(el);
                         });
                     }, 2000);
-                };
+                    yearElement.innerText = data.year;
+                });
+            galery.appendChild(nextElement);
+        };
 
-                galery.appendChild(nextElement);
-                yearElement.innerText = images[currentImage].match(/\/(\d{4})\//)[1] || "";
-            };
-
-            nextImage();
-            setInterval(nextImage, 6000);
-        }
-    });
+        nextImage();
+        setInterval(nextImage, 10_000);
+    }
 
     const teamMemberPictures = document.querySelectorAll(".members-list .bilder-container");
     if (teamMemberPictures) {
