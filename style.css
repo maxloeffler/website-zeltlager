@@ -280,6 +280,28 @@ footer a {
   margin-bottom: 0.75vw;
 }
 
+.impressum .weblinks {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  height: 6vh;
+}
+
+.impressum .weblinks img {
+  height: 100%;
+  margin-left: 0.5vw;
+  margin-right: 0.5vw;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border-radius: 22.37%;
+}
+
+.impressum .weblinks img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px #00000033;
+}
+
 .countdown {
   min-width: 28vw;
   min-height: 7vw;
@@ -382,6 +404,23 @@ footer a {
 
 /* -- Team -- */
 .team-general {}
+
+.team button {
+  background-color: #049ba8;
+  border-radius: 0.5vw;
+  color: white;
+  border: none;
+  padding: 0.75vw 1.5vw;
+  font-size: 1.5vw;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+  font-family: 'Font', sans-serif;
+  margin: 4vh 0;
+}
+
+.team button:hover {
+  background-color: #037a7f;
+}
 
 .members-list {
   display: flex;
@@ -519,6 +558,13 @@ footer a {
 
   .faq {
     font-size: 2.5vw;
+  }
+
+  /* Team */
+  .team button {
+    font-size: 2vw;
+    padding: 1vw 2vw;
+    border-radius: 0.8vw;
   }
 
   /* Impressum */
@@ -737,6 +783,14 @@ footer a {
 
   .member-qualifications li {
     font-size: 1rem;
+  }
+
+  .team button {
+    font-size: 5vw;
+    padding: 3vw 5vw;
+    border-radius: 2vw;
+    width: 100%;
+    margin-bottom: 2vw;
   }
 
   /* ── Impressum ── */
